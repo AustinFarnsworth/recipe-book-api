@@ -1,0 +1,8 @@
+{
+  "recipes": [
+    { "id": 1, "title": "Spaghetti", "category": "Dinner" },
+    { "id": 5, "title": "Chicken Pillows", "category": "Lunch" },
+    { "id": 4, "title": "Chocolate Chip Cookies", "category": "Dessert" },
+    { "id": 87, "title": "Homemade Pizza", "category": "Dinner" }
+  ]
+}
