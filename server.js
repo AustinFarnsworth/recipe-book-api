@@ -45,7 +45,7 @@ app.get("/api/recipe/:id", async (request, response) => {
 app.post("/api/recipe", (request, response) => {
   const body = request.body;
 
-  if (!body.recipeId || !body.title || !body.category) {
+  if (!body.id || !body.title || !body.category) {
     response
       .status(400)
       .send("Bad Request. Validation Error. Missing title and/or category");
@@ -103,7 +103,7 @@ app.delete("/api/recipe/:id", (request, response) => {
   });
 
   if (recipeIndex === -1) {
-    response.send(`Recipe wiht ID ${recipeId} not found`);
+    response.send(`Recipe with ID ${recipeId} not found`);
     return;
   }
 
