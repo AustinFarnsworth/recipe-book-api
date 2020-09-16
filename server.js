@@ -4,10 +4,13 @@ const bodyParser = require("body-parser");
 const { response, request } = require("express");
 const dataAccessLayer = require("./dataAccessLayer");
 const { ObjectId } = require("mongodb");
+const cors = require("cors");
 dataAccessLayer.connect();
 
 // Create the Server
 const app = express();
+
+app.use(cors());
 
 // TODO: add in middleware: cors, body-parser
 app.use(bodyParser.json());
