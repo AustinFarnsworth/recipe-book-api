@@ -1,8 +1,10 @@
 const chalk = require("chalk");
 const express = require("express");
 const bodyParser = require("body-parser");
-const fs = require("fs");
 const { response, request } = require("express");
+const dataAccessLayer = require("./dataAccessLayer");
+const { ObjectId } = require("mongodb");
+dataAccessLayer.connect();
 
 // Create the Server
 const app = express();
@@ -10,28 +12,28 @@ const app = express();
 // TODO: add in middleware: cors, body-parser
 app.use(bodyParser.json());
 
-let recipes = [];
-
-try {
-  recipes = JSON.parse(fs.readFileSync("recipe.json")).recipes;
-} catch (error) {
-  console.log("No Existing file");
-}
-
 // TODO: add the endpoints e.g. app.get('/path', () => { ... })
 app.get("/api/recipe", async (request, response) => {
-  console.log(recipes);
+  const recipes = await dataAccessLayer.findAll();
+
+  // console.log(recipes);
   response.send(recipes);
 });
 
 app.get("/api/recipe/:id", async (request, response) => {
-  const recipeId = Number(request.params.id);
+  const recipeName = request.params.id;
 
-  const recipe = recipes.find((r) => {
-    if (recipeId === r.id) {
-      return true;
-    }
-  });
+  const recipeQuery = {
+    _id: new ObjectId(recipeId),
+  };
+  let recipes = await dataAccessLayer.findOne();
+
+  try {
+    recipes = await dataAccessLayer.findOne();
+  } catch (error) {
+    response.send(`Recipe with ID ${recipeId} not found `);
+    return;
+  }
 
   if (!recipe) {
     response.send(`Recipe with ID ${recipeId} not found`);
@@ -42,77 +44,44 @@ app.get("/api/recipe/:id", async (request, response) => {
 });
 
 // Create a New Product
-app.post("/api/recipe", (request, response) => {
+app.post("/api/recipe", async (request, response) => {
   const body = request.body;
 
-  if (!body.id || !body.title || !body.category) {
+  if (!body.title || !body.category) {
     response
       .status(400)
       .send("Bad Request. Validation Error. Missing title and/or category");
     return;
   }
-  recipes.push(body);
 
-  const jsonPayload = {
-    recipes: recipes,
-  };
-
-  fs.writeFileSync("recipe.json", JSON.stringify(jsonPayload));
+  await dataAccessLayer.insertOne(body);
 
   response.send();
 });
 
 // Update existing product by ID
-app.put("/api/recipe/:id", (request, response) => {
-  const recipeId = Number(request.params.id);
-
-  const recipe = recipes.find((r) => {
-    return recipeId === r.id;
-  });
-
-  if (!recipe) {
-    response.send(`Recipe with id ${recipeId} not found!`);
-    return;
-  }
-
+app.put("/api/recipe/:id", async (request, response) => {
+  const recipeId = request.params.id;
   const body = request.body;
 
-  if (body.title) {
-    recipe.title = body.title;
-  }
-
-  if (body.category) {
-    recipe.category = recipe.category;
-  }
-
-  const jsonPayload = {
-    recipes: recipes,
+  const recipeQuery = {
+    _id: new ObjectId(recipeId),
   };
-
-  fs.writeFileSync("recipe.JSON", JSON.stringify(jsonPayload));
+  await dataAccessLayer.updateOne(recipeQuery, body);
 
   response.send();
 });
 
 // Delete existing product by id
-app.delete("/api/recipe/:id", (request, response) => {
-  const recipeId = Number(request.params.id);
+app.delete("/api/recipe/:id", async (request, response) => {
+  const recipeId = request.params.id;
 
-  const recipeIndex = recipes.findIndex((r) => {
-    return recipeId === r.id;
-  });
-
-  if (recipeIndex === -1) {
-    response.send(`Recipe with ID ${recipeId} not found`);
-    return;
-  }
-
-  recipes.splice(recipeIndex, 1);
-
-  const jsonPayload = {
-    recipes: recipes,
+  const recipeQuery = {
+    _id: new ObjectId(recipeId),
   };
-  fs.writeFileSync("recipe.json", JSON.stringify(jsonPayload));
+
+  await dataAccessLayer.deleteOne(recipeQuery);
+
   response.send();
 });
 
