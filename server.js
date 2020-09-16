@@ -86,7 +86,7 @@ app.delete("/api/recipe/:id", async (request, response) => {
 });
 
 // Starting the Server
-const port = process.eventNames.PORT ? process.eventNames.PORT : 3001;
+const port = process.env.PORT ? process.env.PORT : 3001;
 app.listen(port, () => {
   console.log(chalk.blue.bold("API") + chalk.red.bold("STARTED!"));
 });
