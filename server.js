@@ -24,15 +24,16 @@ app.get("/api/recipe", async (request, response) => {
 });
 
 app.get("/api/recipe/:id", async (request, response) => {
-  const recipeName = request.params.id;
+  const recipeId = request.params.id;
 
   const recipeQuery = {
     _id: new ObjectId(recipeId),
   };
-  let recipes = await dataAccessLayer.findOne();
+
+  let recipe;
 
   try {
-    recipes = await dataAccessLayer.findOne();
+    recipe = await dataAccessLayer.findOne(recipeQuery);
   } catch (error) {
     response.send(`Recipe with ID ${recipeId} not found `);
     return;
@@ -53,13 +54,15 @@ app.post("/api/recipe", async (request, response) => {
   if (!body.name || !body.ingredients || !body.instructions || !body.category) {
     response
       .status(400)
-      .send("Bad Request. Validation Error. Missing title and/or category");
+      .send(
+        "Bad Request. Validation Error. Missing Name, Ingredients, Instructions, and/or Category"
+      );
     return;
   }
 
   await dataAccessLayer.insertOne(body);
 
-  response.send();
+  response.status(201).send();
 });
 
 // Update existing product by ID

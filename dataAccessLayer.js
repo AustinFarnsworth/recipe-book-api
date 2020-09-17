@@ -96,6 +96,7 @@ const insertOne = function (recipe) {
 // -updateOne() document (UPDATE - U from CRUD)
 const updateOne = function (query, recipeList) {
   const recipeListQuery = {};
+
   if (recipeList.name) {
     recipeListQuery.name = recipeList.name;
   }
@@ -120,7 +121,7 @@ const updateOne = function (query, recipeList) {
         return;
       }
 
-      console.log("Successfully UPdated Document!");
+      console.log("Successfully Updated Document!");
       resolve();
     });
   });
@@ -161,20 +162,20 @@ module.exports = { connect, insertOne, findAll, updateOne, deleteOne, findOne };
 //   // console.log(recipe);
 
 //   // Test updateOne
-//   // const recipeListQuery = {
-//   //   _id: new ObjectId("5f5e6d8af00258134dbc8617"),
-//   // };
-//   // const recipeList = {
-//   //   id: "15",
-//   //   title: "Hot Chocolate",
-//   // };
-//   // await updateOne(recipeListQuery, recipeList);
-
-//   // Test deleteOne
 //   const recipeListQuery = {
-//     _id: new ObjectId("5f5fb56ac775551b9ef7ef3f"),
+//     _id: new ObjectId("5f5e6d8af00258134dbc8617"),
 //   };
-//   await deleteOne(recipeListQuery);
+//   const recipeList = {
+//     id: "15",
+//     title: "Hot Chocolate",
+//   };
+//   await updateOne(recipeListQuery, recipeList);
+
+//   //   // Test deleteOne
+//   //   const recipeListQuery = {
+//   //     _id: new ObjectId("5f5fb56ac775551b9ef7ef3f"),
+//   //   };
+//   //   await deleteOne(recipeListQuery);
 
 //   console.log("END");
 //   process.exit(0);
