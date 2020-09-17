@@ -96,9 +96,16 @@ const insertOne = function (recipe) {
 // -updateOne() document (UPDATE - U from CRUD)
 const updateOne = function (query, recipeList) {
   const recipeListQuery = {};
+  if (recipeList.name) {
+    recipeListQuery.name = recipeList.name;
+  }
 
-  if (recipeList.title) {
-    recipeListQuery.title = recipeList.title;
+  if (recipeList.ingredients) {
+    recipeListQuery.ingredients = recipeList.ingredients;
+  }
+
+  if (recipeList.instructions) {
+    recipeListQuery.instructions = recipeList.instructions;
   }
 
   if (recipeList.category) {

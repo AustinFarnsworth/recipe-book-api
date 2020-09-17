@@ -50,7 +50,7 @@ app.get("/api/recipe/:id", async (request, response) => {
 app.post("/api/recipe", async (request, response) => {
   const body = request.body;
 
-  if (!body.title || !body.category) {
+  if (!body.name || !body.ingredients || !body.instructions || !body.category) {
     response
       .status(400)
       .send("Bad Request. Validation Error. Missing title and/or category");
@@ -89,7 +89,7 @@ app.delete("/api/recipe/:id", async (request, response) => {
 });
 
 // Starting the Server
-const port = process.env.PORT ? process.env.PORT : 3001;
+const port = process.env.PORT ? process.env.PORT : 3003;
 app.listen(port, () => {
   console.log(chalk.blue.bold("API") + chalk.red.bold("STARTED!"));
 });
